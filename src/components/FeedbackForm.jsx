@@ -19,11 +19,11 @@ export default function FeedbackForm() {
     }
   }, [feedbackEdit])
 
-  const handleTextChange = (e) => {
-    if(text === '') {
+  const handleTextChange = ({ target: { value } }) => { // get the value
+    if(value === '') {
       setBtnDisabled(true)
       setMessage(null)
-    } else if(text !== '' && text.trim().length <= 10) {
+    } else if(value.trim().length <= 10) { // check for less than 10
       setBtnDisabled(true)
       setMessage("Text must be at least 10 characters")
     } else {
@@ -31,7 +31,7 @@ export default function FeedbackForm() {
       setBtnDisabled(false)
     }
 
-    setText(e.target.value)
+    setText(value)
   }
 
   const handleSubmit = (e) => {
@@ -48,6 +48,9 @@ export default function FeedbackForm() {
         addFeedback(newFeedback)
       }
 
+      // NOTE: reset to default state after submission
+      setBtnDisabled(true)
+      setRating(10)
       setText('')
     }
   }
@@ -56,7 +59,7 @@ export default function FeedbackForm() {
     <Card>
       <form onSubmit={handleSubmit}>
         <h2>How would you rate your service with us?</h2>
-        <RatingSelect select={(rating) => setRating(rating)}/>
+        <RatingSelect select={setRating} selected={rating}/>
         <div className="input-group">
             <input
                 onChange={handleTextChange}
